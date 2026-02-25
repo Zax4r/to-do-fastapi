@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
 import os
 from app.students.router import students_router
 from app.majors.router import majors_router
@@ -18,6 +19,10 @@ app.include_router(students_router)
 app.include_router(majors_router)
 app.include_router(users_router)
 app.include_router(pages_router)
+
+@app.get('/')
+async def root():
+    return RedirectResponse('/pages/students')
 
 @app.middleware('http')
 async def add_time_logging(request: Request, call_next):
