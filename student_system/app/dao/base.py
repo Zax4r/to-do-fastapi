@@ -53,9 +53,9 @@ class BaseDAO:
                 )
                 result = await session.execute(query)
                 try:
-                    session.commit()
+                    await session.commit()
                 except SQLAlchemyError as e:
-                    session.rollback()
+                    await session.rollback()
                     raise e
                 return result.rowcount
             
