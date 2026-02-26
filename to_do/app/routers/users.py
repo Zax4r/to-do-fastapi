@@ -15,3 +15,8 @@ async def add_user(user: SUserAdd):
 async def get_users(session: DbDep):
     users = await UserService.get_all(session)
     return users
+
+@router.get('/{user_id}', response_model=SUserAnswer)
+async def get_user(user_id:int, session: DbDep):
+    user = await UserService.get_one_or_none_by_id(session,user_id)
+    return user
