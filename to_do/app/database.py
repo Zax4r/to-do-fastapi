@@ -9,7 +9,6 @@ engine = create_async_engine(DATABASE_URL)
 Session = async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class Base(AsyncAttrs, DeclarativeBase):
-    __abstract__ = None
 
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
@@ -18,5 +17,4 @@ async def get_db():
     try:
         yield session
     finally:
-        session.close()
-
+        await session.close()
