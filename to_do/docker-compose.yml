@@ -12,7 +12,7 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       ALGORITHM: ${ALGORITHM}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
-        
+      CORS_ORIGINS: '["http://frontend:8501"]'
     depends_on:
       pg:
         condition: service_healthy
@@ -32,6 +32,16 @@ services:
       interval: 5s
       timeout: 3s
       retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: to_do_frontend
+    ports:
+     - "8080:8501"
+    environment:
+      API_URL: "http://app:8000"
 
 volumes:
   to_do_db:
