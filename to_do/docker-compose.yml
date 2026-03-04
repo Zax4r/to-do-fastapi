@@ -1,6 +1,6 @@
 services:
 
-  app:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -41,7 +41,9 @@ services:
     ports:
      - "8080:8501"
     environment:
-      API_URL: "http://app:8000"
+      API_URL: "http://backend:8000"
+    depends_on:
+      - backend
 
 volumes:
   to_do_db:
