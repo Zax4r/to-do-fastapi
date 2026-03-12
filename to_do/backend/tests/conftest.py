@@ -46,3 +46,24 @@ async def async_client(async_db):
         transport=ASGITransport(app=app),
         base_url='http://localhost'
     )
+
+
+@pytest_asyncio.fixture(scope='function', autouse=False)
+async def user_created(async_client):
+    await async_client.post('/users/add/',
+                            json={'email':'testuser@email.com',
+                                'username': 'test_user',
+                                'password': 'password'})
+    
+
+@pytest_asyncio.fixture(scope='function', autouse=False)
+async def user_authenticated(async_client):
+    await async_client.post('/users/add/',
+                            json={'email':'testuser@email.com',
+                                'username': 'test_user',
+                                'password': 'password'})
+    
+
+    res = await async_client.post('/registration/login/',
+                                  json={'email':'testuser@email.com',
+                                         'password': 'password'})
