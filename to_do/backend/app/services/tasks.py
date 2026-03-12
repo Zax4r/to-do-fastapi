@@ -57,6 +57,8 @@ class TaskService(BaseService):
         stmt = select(cls.model).where(cls.model.id == id)
         result = await session.execute(stmt)
         instance = result.scalar_one()
+        if not instance:
+            return False
 
         is_checked_changed = False
         if 'is_checked' in new_values:
