@@ -28,23 +28,12 @@ A task manager built with FastAPI.
 ## Running
 
 ```bash
-docker compose up
+docker compose build
+docker compose up 
 ```
 
 - Backend: `http://0.0.0.0:8000`
 - Swagger UI: `http://0.0.0.0:8000/docs`
 
 ## Tests
-BEFORE RUNNING TESTS COMMENT THIS LINES IN to_do/main.py
-```python
-app.add_middleware(
-    RateLimiterMiddleware,
-    redis_url=get_redis_url(),
-    max_requests=5,
-    window_seconds=10
-)
-```
-```bash
-cd to_do/backend
-pytest
-```
+Also there are tests for this app
