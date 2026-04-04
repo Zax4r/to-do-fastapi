@@ -4,6 +4,7 @@ from app.schemas.tasks import STaskAdd, STaskShow, STaskUpd
 from app.models.dependecies import DbDep
 from app.core.dependecies import CUDep
 from typing import List
+from app.cache import set_cached,get_cached
 
 
 router = APIRouter(prefix='/tasks',tags=['Работа с задачами'])
@@ -46,5 +47,10 @@ async def delete_task(task_id: int, session: DbDep, current_user: CUDep):
 
 @router.get('/', response_model=List[STaskShow])
 async def get_all(session: DbDep, user: CUDep):
+    tasks_cached = await get_cached(f'tasks:user:{user.id}')
+    if tasks_cached:
+        return tasks_cached
     tasks = await TaskService.get_all(session, user_id = user.id)
-    return tasks
+    tasks_dicts = [STaskShow.model_validate(t).model_dump() for t in tasks] 
+    await set_cached(f'tasks:user:{user.id}', tasks_dicts)
+    return tasks_dicts
