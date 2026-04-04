@@ -16,6 +16,4 @@ class User(Base):
 
     tasks: Mapped[List['Task']] = relationship('Task',back_populates='user',cascade="all, delete-orphan")
 
-    def __repr__(self) -> str:
-        return f"User(id={self.id}, username={self.username}, email={self.email})"
-    
+

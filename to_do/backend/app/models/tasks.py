@@ -14,6 +14,3 @@ class Task(Base):
 
     user:Mapped['User'] = relationship('User',back_populates='tasks')
 
-    def __repr__(self):
-        return f'Task: {self.task_name}'
-

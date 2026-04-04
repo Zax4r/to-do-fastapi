@@ -7,7 +7,7 @@ class STaskBase(BaseModel):
     task_description: str = Field(default='')
 
 class STaskAdd(STaskBase):
-    pass
+    model_config = ConfigDict(from_attributes=True)
 
 class STaskUpd(BaseModel):
     task_name: str

@@ -7,6 +7,7 @@ class SUserBase(BaseModel):
 class SUserAdd(SUserBase):
     email: EmailStr = Field(...)
     password: str = Field(...,min_length=4)
+    model_config = ConfigDict(from_attributes=True)
 
 class SUserAnswer(SUserBase):
     id: int = Field(...)

@@ -4,6 +4,7 @@ from app.routers.tasks import router as task_router
 from app.routers.auth import router as auth_router
 from app.core.config import get_redis_url
 from app.middleware.rate_limiter import RateLimiterMiddleware
+from app.middleware.time_logger import TimeLoggerMiddleware
 
 
 app = FastAPI()
@@ -13,6 +14,10 @@ app.add_middleware(
     redis_url=get_redis_url(),
     max_requests=5,
     window_seconds=10
+)
+
+app.add_middleware(
+    TimeLoggerMiddleware
 )
 
 app.include_router(user_router)

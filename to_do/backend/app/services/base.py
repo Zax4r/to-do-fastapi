@@ -26,6 +26,7 @@ class BaseService:
         try:
             session.add(new_entity)
             await session.commit()
+            await session.refresh(new_entity)
             return new_entity
         except Exception as e:
             await session.rollback()

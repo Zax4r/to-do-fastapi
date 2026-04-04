@@ -13,11 +13,13 @@ async def add_user(user: SUserAdd, session: DbDep):
     new_user_dict = user.model_dump()
     new_user_dict['password'] = hash_password(new_user_dict['password'])
     check = await UserService.add_one(session,**new_user_dict)
+    print(check)
     if not check:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Error while adding user"
         )
+    print(check)
     return check
 
 @router.get('/', response_model=List[SUserAnswer])
