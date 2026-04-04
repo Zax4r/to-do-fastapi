@@ -5,9 +5,14 @@ from app.routers.auth import router as auth_router
 from app.core.config import get_redis_url
 from app.middleware.rate_limiter import RateLimiterMiddleware
 from app.middleware.time_logger import TimeLoggerMiddleware
+from app.cache import init_redis, close_redis
 
+async def lifespan(app):
+    await init_redis(get_redis_url())
+    yield 
+    await close_redis()
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     RateLimiterMiddleware,
