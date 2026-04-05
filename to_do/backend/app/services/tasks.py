@@ -91,4 +91,5 @@ class TaskService(BaseService):
             await session.execute(user_stmt)
 
         await session.commit()
-        return True 
+        await session.refresh(instance)
+        return instance
