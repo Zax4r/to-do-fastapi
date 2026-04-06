@@ -1,16 +1,16 @@
 from fastapi import FastAPI
+import redis.asyncio as redis
 from app.routers.users import router as user_router
 from app.routers.tasks import router as task_router
 from app.routers.auth import router as auth_router
 from app.core.config import get_redis_url
 from app.middleware.rate_limiter import RateLimiterMiddleware
 from app.middleware.time_logger import TimeLoggerMiddleware
-from app.cache import init_redis, close_redis
 
 async def lifespan(app):
-    await init_redis(get_redis_url())
+    app.state.redis_client = redis.from_url(get_redis_url())
     yield 
-    await close_redis()
+    await app.state.redis_client.close()
 
 app = FastAPI(lifespan=lifespan)
 
