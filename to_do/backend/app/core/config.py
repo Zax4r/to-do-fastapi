@@ -3,8 +3,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql+asyncpg://postgres:1111@pg:5432/to_do_db")
-    REDIS_URL: str =  os.getenv("REDIS_URL")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql+asyncpg://name:password@pg:5432/dbname")
+    REDIS_URL: str =  os.getenv("REDIS_URL",'baseredisurl')
 
     SECRET_KEY: str = os.getenv("SECRET_KEY", "dev-secret")
     ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
