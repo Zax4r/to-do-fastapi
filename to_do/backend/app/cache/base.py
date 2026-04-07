@@ -1,6 +1,7 @@
 from typing import Any, Optional
 import json
 
+
 class BaseCacheService:
     def __init__(self, redis_client):
         self.redis = redis_client
@@ -15,8 +16,4 @@ class BaseCacheService:
 
     async def set(self, key: str, value: Any, ttl: int = 300):
         data = json.dumps(value, default=str)
-        await self.redis.set(
-            self.build_key(key), 
-            data, 
-            ex=ttl
-        )
+        await self.redis.set(self.build_key(key), data, ex=ttl)

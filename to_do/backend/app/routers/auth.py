@@ -6,22 +6,23 @@ from app.core.security import authenticate_user, hash_password
 from app.schemas.registrations import SRegister, SLogin
 from app.services.users import UserService
 
+router = APIRouter(prefix="/registration", tags=["Управление регистрацией"])
 
-router = APIRouter(prefix='/registration',tags=['Управление регистрацией'])
 
-@router.post('/register/')
+@router.post("/register/")
 async def add_user(user: SRegister, session: DbDep):
     new_user_dict = user.model_dump()
-    new_user_dict['password'] = hash_password(new_user_dict['password'])
-    check = await UserService.add_one(session,**new_user_dict)
+    new_user_dict["password"] = hash_password(new_user_dict["password"])
+    check = await UserService.add_one(session, **new_user_dict)
     if not check:
         raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Email already exists",
-            )
-    return {'message':f'Successfully added'}
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already exists",
+        )
+    return {"message": f"Successfully added"}
 
-@router.post('/login/')
+
+@router.post("/login/")
 async def login(session: DbDep, response: Response, form: SLogin):
     user = await authenticate_user(session, form.email, form.password)
     if not user:
@@ -31,13 +32,14 @@ async def login(session: DbDep, response: Response, form: SLogin):
         )
     jwt_settings = get_jwt_info()
     token = create_access_token(
-        {'sub':str(user.id)},expires_delta=jwt_settings['ACCESS_TOKEN_EXPIRE_MINUTES']
+        {"sub": str(user.id)}, expires_delta=jwt_settings["ACCESS_TOKEN_EXPIRE_MINUTES"]
     )
 
-    response.set_cookie('user_access_token',token, httponly=True)
-    return { 'message': 'Авторизация успешна!'}
+    response.set_cookie("user_access_token", token, httponly=True)
+    return {"message": "Авторизация успешна!"}
 
-@router.post('/logout/')
+
+@router.post("/logout/")
 async def login(response: Response):
-    response.delete_cookie('user_access_token')
-    return {'message':'Успешно вышел с аккаунта'}
+    response.delete_cookie("user_access_token")
+    return {"message": "Успешно вышел с аккаунта"}
