@@ -6,7 +6,7 @@ A task manager built with FastAPI.
 
 - **Backend**: FastAPI, SQLAlchemy, Alembic
 - **Database**: PostgreSQL
-- **Cache**: Redis (Rate limiting)
+- **Cache**: Redis
 - **Authentication**: JWT (cookies)
 - **Containerization**: Docker Compose
 
@@ -36,4 +36,11 @@ docker compose up
 - Swagger UI: `http://0.0.0.0:8000/docs`
 
 ## Tests
-Also there are tests for this app
+Also, there are tests for this app.
+Before running the tests, you have to disable the rate limiter middleware in the main file.
+Also, you'll need to have Postgres installed on your device.
+
+run this command in backend directory.
+```bash
+pytest tests/
+```
