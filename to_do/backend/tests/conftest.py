@@ -5,6 +5,7 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from app.database import Base, get_db
 from main import app
+from tests.mockredis import MockRedis
 
 TEST_DB_URL = "postgresql+asyncpg://postgres:1111@localhost/test_todo_db"
 
@@ -40,7 +41,8 @@ async def async_db(async_db_engine):
 async def async_client(async_db):
     async def override_db():
         yield async_db
-    
+    mockredis = MockRedis()
+    app.state.redis_client = mockredis
     app.dependency_overrides[get_db] = override_db
     return AsyncClient(
         transport=ASGITransport(app=app),
