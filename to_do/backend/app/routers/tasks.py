@@ -21,10 +21,9 @@ async def add_task(add_task: STaskAdd, session: DbDep, user: CUDep, cache: TCDep
             detail=f"Error with adding task"
         )
     cached_tasks = await cache.get(user_id)
-    if cached_tasks is None:
-        cached_tasks = []
-    cached_tasks.append(STaskShow.model_validate(check).model_dump())
-    await cache.set(user_id,cached_tasks)
+    if cached_tasks is not None:
+        cached_tasks.append(STaskShow.model_validate(check).model_dump())
+        await cache.set(user_id,cached_tasks)
     return check
 
 @router.put('/update/{task_id}', response_model= STaskUpd)
@@ -38,11 +37,12 @@ async def update_task(task_id: int, task_upd: STaskUpd, session: DbDep, user: CU
             detail=f"Error with updating task"
         )
     cached_tasks = await cache.get(user_id)
-    for i in range(len(cached_tasks)):
-        if cached_tasks[i]['id']==task_id:
-            cached_tasks[i] = STaskShow.model_validate(check).model_dump()
-            break
-    await cache.set(user_id, cached_tasks)
+    if cached_tasks is not None:
+        for i in range(len(cached_tasks)):
+            if cached_tasks[i]['id']==task_id:
+                cached_tasks[i] = STaskShow.model_validate(check).model_dump()
+                break
+        await cache.set(user_id, cached_tasks)
     return task_upd
 
 
@@ -57,11 +57,12 @@ async def delete_task(task_id: int, session: DbDep, user: CUDep, cache: TCDep):
             detail=f"Error with deleting task"
         )
     cached_tasks = await cache.get(user_id)
-    for i in range(len(cached_tasks)):
-        if cached_tasks[i]['id']==task_id:
-            cached_tasks.pop(i)
-            break
-    await cache.set(user_id, cached_tasks)
+    if cached_tasks is not None:
+        for i in range(len(cached_tasks)):
+            if cached_tasks[i]['id']==task_id:
+                cached_tasks.pop(i)
+                break
+        await cache.set(user_id, cached_tasks)
     return {'message': f'Task deleted'}
 
 
